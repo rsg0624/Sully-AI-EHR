@@ -48,4 +48,8 @@ def render():
 
     st.subheader("All Appointments")
     for appt in appointments:
-        st.write(appt)
+        patient = next((p for p in patients if p["id"] == appt["patient_id"]), {})
+        doctor = next((d for d in doctors if d["id"] == appt["doctor_id"]), {})
+        st.markdown(f"- 🗓️ **{appt['date']} {appt['time']}**")
+        st.markdown(f"  - 👤 Patient: {patient.get('name', appt['patient_id'])}")
+        st.markdown(f"  - 🧑‍⚕️ Doctor: {doctor.get('name', appt['doctor_id'])}")
