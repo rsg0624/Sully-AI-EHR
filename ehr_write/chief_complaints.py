@@ -8,7 +8,7 @@ import base64
 from pydub import AudioSegment
 
 # --- SET YOUR OPENAI WHISPER KEY HERE ---
-openai.api_key = "sk-REPLACE_WITH_YOUR_KEY"
+openai.api_key = "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"
 
 def load_patient_data():
     with open("data/mock_patients.json", "r") as file:
