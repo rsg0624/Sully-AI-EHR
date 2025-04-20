@@ -15,17 +15,21 @@ You are a clinical assistant. Based on the following chief complaint, generate a
 
 Chief Complaint: "{complaint}"
 
-Return only the SOAP sections.
+Return only the SOAP sections in the following format:
+Subjective: ...
+Objective: ...
+Assessment: ...
+Plan: ...
 """
 
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "user", "content": prompt}
         ],
         temperature=0.5
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 def render():
     st.header("Write SOAP Notes")
@@ -59,7 +63,7 @@ def render():
     if soap:
         st.subheader("Generated SOAP Note")
         st.markdown(f"```text\n{soap}\n```")
-        # Optionally split sections (basic heuristic)
+        # Optionally split sections
         try:
             subj = soap.split("Subjective:")[1].split("Objective:")[0].strip()
             obj = soap.split("Objective:")[1].split("Assessment:")[0].strip()
