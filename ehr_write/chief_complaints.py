@@ -1,13 +1,9 @@
 import streamlit as st
 import openai
 import json
-import os
-from io import BytesIO
 import tempfile
-import base64
-from pydub import AudioSegment
 
-# --- SET YOUR OPENAI WHISPER KEY HERE ---
+# --- SET YOUR VALID OPENAI KEY HERE ---
 openai.api_key = "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"
 
 def load_patient_data():
@@ -18,9 +14,12 @@ def transcribe_audio(audio_bytes):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_audio_file:
         temp_audio_file.write(audio_bytes)
         temp_audio_file.flush()
-        audio_file = open(temp_audio_file.name, "rb")
-        transcript = openai.Audio.transcribe("whisper-1", audio_file)
-        return transcript.get("text", "")
+        with open(temp_audio_file.name, "rb") as audio_file:
+            transcript = openai.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio_file
+            )
+            return transcript.text
 
 def render():
     st.header("Write Chief Complaints")
@@ -38,9 +37,9 @@ def render():
 
     st.success(f"Patient Found: {patient['name']} ({patient['age']} y/o, {patient['gender']})")
 
-    st.subheader("🎙️ Record Chief Complaint")
+    st.subheader("🎙️ Upload or Record Audio")
 
-    audio_file = st.file_uploader("Upload or record audio", type=["mp3", "wav", "m4a"])
+    audio_file = st.file_uploader("Upload an audio file", type=["mp3", "wav", "m4a"])
     transcribed_text = ""
 
     if audio_file is not None:
