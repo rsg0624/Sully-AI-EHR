@@ -3,7 +3,7 @@ import openai
 import json
 
 # --- USE SAME API KEY AS WHISPER ---
-openai.api_key = "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"
+openai.api_key = "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"
 
 def load_patient_data():
     with open("data/mock_patients.json", "r") as file:
